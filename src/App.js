@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 
 function App() {
-  // =====================================================
-  // INICIO
-  // Inicializar estudiantes = []
-  // Definir opcion = 0
-  // =====================================================
-
   const [estudiantes, setEstudiantes] = useState([]);
   const [opcion, setOpcion] = useState(0);
 
@@ -23,7 +17,6 @@ function App() {
   const [resultado, setResultado] = useState(null);
   const [mensaje, setMensaje] = useState('');
 
-
   const manejarCambio = (e) => {
     setFormulario({
       ...formulario,
@@ -31,21 +24,10 @@ function App() {
     });
   };
 
-  // =====================================================
-  // CASO 1: CAPTURAR
-  // =====================================================
-
   const capturar = (e) => {
     e.preventDefault();
 
-    const {
-      matricula,
-      nombre,
-      materia,
-      c1,
-      c2,
-      c3
-    } = formulario;
+    const { matricula, nombre, materia, c1, c2, c3 } = formulario;
 
     if (
       !matricula ||
@@ -55,22 +37,15 @@ function App() {
       c2 === '' ||
       c3 === ''
     ) {
-      setMensaje(
-        '⚠️ Por favor, llena todos los campos para capturar.'
-      );
+      setMensaje('⚠️ Por favor, llena todos los campos para capturar.');
       return;
     }
-
 
     const calif1 = parseFloat(c1);
     const calif2 = parseFloat(c2);
     const calif3 = parseFloat(c3);
 
-
-    const promedio_real =
-      (calif1 + calif2 + calif3) / 3;
-
-
+    const promedio_real = (calif1 + calif2 + calif3) / 3;
     const promedio = Math.round(promedio_real);
 
     let estatus;
@@ -82,24 +57,19 @@ function App() {
     }
 
     const nuevoEstudiante = {
-      matricula: matricula,
-      nombre: nombre,
-      materia: materia,
+      matricula,
+      nombre,
+      materia,
       c1: calif1,
       c2: calif2,
       c3: calif3,
-      promedio: promedio,
-      estatus: estatus
+      promedio,
+      estatus
     };
 
-    setEstudiantes([
-      ...estudiantes,
-      nuevoEstudiante
-    ]);
+    setEstudiantes([...estudiantes, nuevoEstudiante]);
 
-    setMensaje(
-      'Estudiante registrado correctamente.'
-    );
+    setMensaje('✅ Estudiante registrado correctamente.');
 
     setFormulario({
       matricula: '',
@@ -117,38 +87,24 @@ function App() {
     }, 3000);
   };
 
-  // =====================================================
-  // CASO 2: BUSCAR
-  // =====================================================
-
   const buscar = () => {
-    const matricula_buscar = matriculaAccion;
+    const matricula_buscar = matriculaAccion.trim();
 
     let encontrado = false;
-
     let i = 0;
 
-    while (
-      i < estudiantes.length &&
-      encontrado === false
-    ) {
-      
-      if (
-        estudiantes[i].matricula === matricula_buscar
-      ) {
-       
+    while (i < estudiantes.length && encontrado === false) {
+      if (estudiantes[i].matricula === matricula_buscar) {
         setResultado(estudiantes[i]);
-
         encontrado = true;
       }
+
       i++;
     }
+
     if (encontrado === false) {
       setResultado(null);
-
-      setMensaje(
-        'Alumno no registrado.'
-      );
+      setMensaje('Alumno no registrado.');
 
       setTimeout(() => {
         setMensaje('');
@@ -158,50 +114,30 @@ function App() {
     }
   };
 
-  // =====================================================
-  // CASO 3: ELIMINAR
-  // =====================================================
-
   const eliminar = () => {
-    const matricula_eliminar = matriculaAccion;
+    const matricula_eliminar = matriculaAccion.trim();
 
-    
     let encontrado = false;
-
-
     let i = 0;
 
-    while (
-      i < estudiantes.length &&
-      encontrado === false
-    ) {
-  
-      if (
-        estudiantes[i].matricula === matricula_eliminar
-      ) {
-      
+    while (i < estudiantes.length && encontrado === false) {
+      if (estudiantes[i].matricula === matricula_eliminar) {
         const nuevosEstudiantes = [...estudiantes];
 
         nuevosEstudiantes.splice(i, 1);
 
         setEstudiantes(nuevosEstudiantes);
+        setResultado(null);
+        setMensaje('🗑️ Registro eliminado.');
 
         encontrado = true;
-
-        setResultado(null);
-
-        setMensaje(
-          '🗑️ Registro eliminado.'
-        );
       }
 
       i++;
     }
 
     if (encontrado === false) {
-      setMensaje(
-        ' Alumno no registrado.'
-      );
+      setMensaje('Alumno no registrado.');
 
       setTimeout(() => {
         setMensaje('');
@@ -209,37 +145,16 @@ function App() {
     }
   };
 
-  const ejecutarOpcion = (numero) => {
+  const seleccionarOpcion = (numero) => {
     setOpcion(numero);
+    setMensaje('');
 
-    switch (numero) {
-      // Caso 1
-      case 1:
-        setMensaje('');
-        break;
+    if (numero !== 2) {
+      setResultado(null);
+    }
 
-      // Caso 2
-      case 2:
-        buscar();
-        break;
-
-      // Caso 3
-      case 3:
-        eliminar();
-        break;
-
-      // Caso 4
-      case 4:
-        setMensaje(
-          'Saliendo del sistema...'
-        );
-        break;
-
-      default:
-        setMensaje(
-          'Opción no válida. Por favor ingrese un número del 1 al 4.'
-        );
-        break;
+    if (numero === 4) {
+      setMensaje('👋 Saliendo del sistema...');
     }
   };
 
@@ -249,8 +164,7 @@ function App() {
         minHeight: '100vh',
         backgroundColor: '#f3f4f6',
         padding: '40px 20px',
-        fontFamily:
-          "'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        fontFamily: "'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
         color: '#1f2937'
       }}
     >
@@ -261,6 +175,17 @@ function App() {
         }}
       >
 
+        <img
+          src={`${process.env.PUBLIC_URL}/estudiante.png`}
+          alt="Estudiante"
+          style={{
+            width: '120px',
+            height: '120px',
+            objectFit: 'contain',
+            display: 'block',
+            margin: '0 auto 15px'
+          }}
+        />
 
         <h1
           style={{
@@ -280,8 +205,7 @@ function App() {
             padding: '20px',
             borderRadius: '15px',
             marginBottom: '25px',
-            boxShadow:
-              '0 4px 10px rgba(0,0,0,0.05)'
+            boxShadow: '0 4px 10px rgba(0,0,0,0.05)'
           }}
         >
           <h3
@@ -296,13 +220,12 @@ function App() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns:
-                'repeat(4, 1fr)',
+              gridTemplateColumns: 'repeat(4, 1fr)',
               gap: '10px'
             }}
           >
             <button
-              onClick={() => ejecutarOpcion(1)}
+              onClick={() => seleccionarOpcion(1)}
               style={{
                 ...btnStyle,
                 backgroundColor: '#10b981'
@@ -312,9 +235,7 @@ function App() {
             </button>
 
             <button
-              onClick={() => {
-                setOpcion(2);
-              }}
+              onClick={() => seleccionarOpcion(2)}
               style={{
                 ...btnStyle,
                 backgroundColor: '#3b82f6'
@@ -324,9 +245,7 @@ function App() {
             </button>
 
             <button
-              onClick={() => {
-                setOpcion(3);
-              }}
+              onClick={() => seleccionarOpcion(3)}
               style={{
                 ...btnStyle,
                 backgroundColor: '#ef4444'
@@ -336,7 +255,7 @@ function App() {
             </button>
 
             <button
-              onClick={() => ejecutarOpcion(4)}
+              onClick={() => seleccionarOpcion(4)}
               style={{
                 ...btnStyle,
                 backgroundColor: '#6b7280'
@@ -351,19 +270,23 @@ function App() {
           <div
             style={{
               backgroundColor:
-                mensaje.includes('✅')
+                mensaje.includes('registrado correctamente')
                   ? '#dcfce7'
                   : mensaje.includes('⚠️')
                   ? '#fef9c3'
                   : mensaje.includes('🗑️')
                   ? '#e0e7ff'
+                  : mensaje.includes('👋')
+                  ? '#e0e7ff'
                   : '#fee2e2',
 
               color:
-                mensaje.includes('✅')
+                mensaje.includes('registrado correctamente')
                   ? '#166534'
                   : mensaje.includes('⚠️')
                   ? '#854d0e'
+                  : mensaje.includes('🗑️')
+                  ? '#3730a3'
                   : mensaje.includes('👋')
                   ? '#3730a3'
                   : '#991b1b',
@@ -379,15 +302,10 @@ function App() {
           </div>
         )}
 
-
-
         {opcion === 1 && (
           <div style={cardStyle}>
-
             <div style={cardHeaderStyle}>
-              <span style={numberBadgeStyle}>
-                1
-              </span>
+              <span style={numberBadgeStyle}>1</span>
 
               <h3
                 style={{
@@ -407,7 +325,6 @@ function App() {
                 gap: '16px'
               }}
             >
-
               <input
                 type="text"
                 name="matricula"
@@ -438,12 +355,10 @@ function App() {
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns:
-                    '1fr 1fr 1fr',
+                  gridTemplateColumns: '1fr 1fr 1fr',
                   gap: '12px'
                 }}
               >
-
                 <input
                   type="number"
                   step="0.1"
@@ -479,7 +394,6 @@ function App() {
                   onChange={manejarCambio}
                   style={inputStyle}
                 />
-
               </div>
 
               <button
@@ -491,16 +405,12 @@ function App() {
               >
                 Registrar Estudiante
               </button>
-
             </form>
           </div>
         )}
 
-
-
         {opcion === 2 && (
           <div style={cardStyle}>
-
             <div style={cardHeaderStyle}>
               <span
                 style={{
@@ -525,9 +435,7 @@ function App() {
               type="text"
               placeholder="Ingresa la matrícula"
               value={matriculaAccion}
-              onChange={(e) =>
-                setMatriculaAccion(e.target.value)
-              }
+              onChange={(e) => setMatriculaAccion(e.target.value)}
               style={{
                 ...inputStyle,
                 marginBottom: '16px'
@@ -544,80 +452,57 @@ function App() {
               Buscar
             </button>
 
-
             {resultado && (
               <div
                 style={{
                   marginTop: '24px',
-                  borderTop:
-                    `6px solid ${
-                      resultado.estatus === 'Aprobado'
-                        ? '#22c55e'
-                        : '#ef4444'
-                    }`,
+                  borderTop: `6px solid ${
+                    resultado.estatus === 'Aprobado'
+                      ? '#22c55e'
+                      : '#ef4444'
+                  }`,
                   paddingTop: '20px'
                 }}
               >
-
-                <h4>
-                  Expediente del Alumno
-                </h4>
+                <h4>Expediente del Alumno</h4>
 
                 <div style={dataRowStyle}>
-                  <span style={dataLabelStyle}>
-                    Matrícula:
-                  </span>
-
+                  <span style={dataLabelStyle}>Matrícula:</span>
                   <span style={dataValueStyle}>
                     {resultado.matricula}
                   </span>
                 </div>
 
                 <div style={dataRowStyle}>
-                  <span style={dataLabelStyle}>
-                    Nombre:
-                  </span>
-
+                  <span style={dataLabelStyle}>Nombre:</span>
                   <span style={dataValueStyle}>
                     {resultado.nombre}
                   </span>
                 </div>
 
                 <div style={dataRowStyle}>
-                  <span style={dataLabelStyle}>
-                    Materia:
-                  </span>
-
+                  <span style={dataLabelStyle}>Materia:</span>
                   <span style={dataValueStyle}>
                     {resultado.materia}
                   </span>
                 </div>
 
                 <div style={dataRowStyle}>
-                  <span style={dataLabelStyle}>
-                    C1:
-                  </span>
-
+                  <span style={dataLabelStyle}>C1:</span>
                   <span style={dataValueStyle}>
                     {resultado.c1}
                   </span>
                 </div>
 
                 <div style={dataRowStyle}>
-                  <span style={dataLabelStyle}>
-                    C2:
-                  </span>
-
+                  <span style={dataLabelStyle}>C2:</span>
                   <span style={dataValueStyle}>
                     {resultado.c2}
                   </span>
                 </div>
 
                 <div style={dataRowStyle}>
-                  <span style={dataLabelStyle}>
-                    C3:
-                  </span>
-
+                  <span style={dataLabelStyle}>C3:</span>
                   <span style={dataValueStyle}>
                     {resultado.c3}
                   </span>
@@ -645,16 +530,13 @@ function App() {
                 >
                   Estatus: {resultado.estatus}
                 </div>
-
               </div>
             )}
           </div>
         )}
 
-
         {opcion === 3 && (
           <div style={cardStyle}>
-
             <div style={cardHeaderStyle}>
               <span
                 style={{
@@ -679,9 +561,7 @@ function App() {
               type="text"
               placeholder="Ingresa la matrícula"
               value={matriculaAccion}
-              onChange={(e) =>
-                setMatriculaAccion(e.target.value)
-              }
+              onChange={(e) => setMatriculaAccion(e.target.value)}
               style={{
                 ...inputStyle,
                 marginBottom: '16px'
@@ -697,10 +577,8 @@ function App() {
             >
               Eliminar Registro
             </button>
-
           </div>
         )}
-
 
         {opcion === 4 && (
           <div
@@ -709,13 +587,10 @@ function App() {
               textAlign: 'center'
             }}
           >
-            <h2>
-              Saliendo del sistema...
-            </h2>
+            <h2>Saliendo del sistema...</h2>
 
             <p>
-              Gracias por utilizar el Sistema de
-              Estudiantes.
+              Gracias por utilizar el Sistema de Estudiantes.
             </p>
 
             <button
@@ -734,17 +609,16 @@ function App() {
             </button>
           </div>
         )}
-
       </div>
     </div>
   );
 }
+
 const cardStyle = {
   backgroundColor: '#ffffff',
   padding: '32px',
   borderRadius: '20px',
-  boxShadow:
-    '0 10px 25px -5px rgba(0, 0, 0, 0.05)',
+  boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05)',
   display: 'flex',
   flexDirection: 'column'
 };
@@ -789,8 +663,7 @@ const btnStyle = {
   cursor: 'pointer',
   width: '100%',
   fontSize: '15px',
-  boxShadow:
-    '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
 };
 
 const dataRowStyle = {
